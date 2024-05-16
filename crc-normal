@@ -1,0 +1,105 @@
+//CRC KEY
+#include <stdio.h>
+#include <string.h>
+#define CRC_Key_LENGTH strlen(crcKey)
+char inputData[28];
+char crcResult[28];
+char crcKey[10];
+int inputDataLength, index_i, index_j;
+void performCRC();
+void XOR()
+{
+    printf("%s  \n", crcResult);
+    //printf("%s \n", crcKey);
+    for (index_j = 1; index_j < CRC_Key_LENGTH; index_j++)
+    {
+        crcResult[index_j] = ((crcResult[index_j] == crcKey[index_j]) ? '0' : '1');
+    }
+}
+void receiverCheck()
+{
+    printf("\nData received: %s \n", inputData);
+    performCRC();
+    int errorDetected = 0;
+    for (index_i = 0; index_i < CRC_Key_LENGTH - 1; index_i++)
+    {
+        if (crcResult[index_i] == '1')
+        {
+            errorDetected = 1;
+            break;
+        }
+    }
+    if (errorDetected)
+    {
+        printf("\nError in transmission \n\n");
+    }
+    else
+    {
+        printf("\nNo Error in transmission \n\n");
+    }
+}
+void performCRC()
+{
+    for (index_i = 0; index_i < CRC_Key_LENGTH; index_i++)
+    {
+        crcResult[index_i] = inputData[index_i];
+    }
+    do
+    {
+        if (crcResult[0] == '1')
+        {
+            XOR();
+        }
+        for (index_j = 0; index_j < CRC_Key_LENGTH - 1; index_j++)
+        {
+            crcResult[index_j] = crcResult[index_j + 1];
+        }
+        crcResult[index_j] = inputData[index_i++];
+    } while (index_i <= inputDataLength + CRC_Key_LENGTH - 1);
+    printf("%s  ", crcResult);
+}
+int main()
+{
+    printf("\nEnter data to be transmitted: ");
+    scanf("%s", inputData);
+    printf("\nEnter the CRC-Key: ");
+    scanf("%s", crcKey);
+    inputDataLength = strlen(inputData);
+    for (index_i = inputDataLength; index_i < inputDataLength + CRC_Key_LENGTH - 1; index_i++)
+    {
+        inputData[index_i] = '0';
+    }
+    printf("\n Data padded with n-1 zeros: %s \n", inputData);
+    performCRC();
+    printf("\n CRC Key Append value is: %s \n", crcResult);
+    printf("\n Choose an option:\n");
+    printf("1. Transmit correct data (No error)\n");
+    printf("2. Introduce an error\n");
+    int option;
+    scanf("%d", &option);
+    if (option == 1)
+    {
+        for (index_i = inputDataLength; index_i < inputDataLength + CRC_Key_LENGTH - 1; index_i++)
+        {
+            inputData[index_i] = crcResult[index_i - inputDataLength];
+        }
+    }
+    else if (option == 2)
+    {
+        printf("\nEnter the index of the bit to flip (0 to %lu): ", inputDataLength + CRC_Key_LENGTH - 2);
+        int flipIndex;
+        scanf("%d", &flipIndex);
+        if (flipIndex >= 0 && flipIndex <= inputDataLength + CRC_Key_LENGTH - 2)
+        {
+            inputData[flipIndex] = (inputData[flipIndex] == '0') ? '1' : '0';
+            printf("\nBit at index %d flipped.", flipIndex);
+        }
+        else
+        {
+            printf("\nInvalid index. No bit flipped.\n");
+        }
+    }
+    printf("\nData sent to the Sender: %s \n", inputData);
+    receiverCheck();
+    return 0;
+}
