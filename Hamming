@@ -1,0 +1,172 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <limits.h>
+#include <math.h>
+
+int bitString[17];
+int h[4];
+int ind = 0;
+
+int calc(int *bitString, int n, int k)
+{
+    int cnt = 0;
+    int p = 0;
+    int i = k;
+
+    while (i <= n)
+    {
+        if (cnt < k)
+        {
+            if (bitString[i] == 1)
+                p++;
+            cnt++;
+            i++;
+        }
+
+        else
+        {
+            cnt = 0;
+            i = i + k;
+        }
+    }
+
+    if (p % 2 == 0)
+    {
+        bitString[k] = 0;
+    }
+    else
+        bitString[k] = 1;
+
+    if (p % 2 != 0)
+        p++;
+
+    if (p % 2 == 0)
+    {
+        h[ind++] = 0;
+    }
+    else
+        h[ind++] = 1;
+}
+
+int calc1(int *bitString, int n, int k)
+{
+    int cnt = 0;
+    int p = 0;
+    int i = k;
+
+    while (i <= n)
+    {
+        if (cnt < k)
+        {
+            if (bitString[i] == 1)
+                p++;
+            cnt++;
+            i++;
+        }
+        else
+        {
+            cnt = 0;
+            i = i + k;
+        }
+    }
+
+    if (p % 2 == 0)
+    {
+        h[ind++] = 0;
+    }
+    else
+        h[ind++] = 1;
+}
+
+int main()
+{
+    int n;
+    int data;
+    printf("Enter size : ");
+    scanf(" %d", &n);
+    printf("Enter Data : ");
+    scanf(" %d", &data);
+    bitString[0] = -2;
+    bitString[1] = -1;
+    bitString[2] = -1;
+
+    for (int i = 1; i <= n; i++)
+    {
+
+        if (i != 1 && i != 2 && i != 4 && i != 8 && i != 16)
+        {
+            scanf(" %d", &data);
+            bitString[i] = data;
+        }
+        else
+        {
+            n++;
+            bitString[i] = -1;
+        }
+    }
+
+    for (int j = 1; j <= n; j++)
+    {
+        printf("%d ", bitString[j]);
+    }
+
+    calc(bitString, n, 1);
+    calc(bitString, n, 2);
+    calc(bitString, n, 4);
+    calc(bitString, n, 8);
+    printf("\n\n");
+
+    for (int j = 1; j <= n; j++)
+    {
+        printf("%d ", bitString[j]);
+    }
+
+    printf("\n\n");
+
+    printf("p1 : %d ", bitString[1]);
+    printf("p2 : %d ", bitString[2]);
+    printf("p4 : %d ", bitString[4]);
+    printf("p8 : %d ", bitString[8]);
+
+    printf("\n\n");
+
+ printf("Code is right ...\n");
+
+    for (int i = 0; i < 4; i++)
+    {
+        printf("%d ", h[i]);
+    }
+
+    // erorr detection
+
+    printf("\n\n");
+    ind = 0;
+
+    bitString[5] = 0;
+
+    for (int j = 1; j <= n; j++)
+    {
+        printf("%d ", bitString[j]);
+    }
+
+    printf("\n\n");
+
+    calc1(bitString, n, 1);
+    calc1(bitString, n, 2);
+    calc1(bitString, n, 4);
+    calc1(bitString, n, 8);
+
+    printf("\n\n");
+
+    printf("Code is right ...\n");
+
+    for (int i = 0; i < 4; i++)
+    {
+        printf("%d ", h[i]);
+    }
+
+
+
+return 0;
+}
