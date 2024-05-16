@@ -62,7 +62,7 @@ int main() {
     char data[s];
     char data1[s];
     printf("Enter the data: ");
-    scanf("%s",&data);
+    scanf("%s",data);
     data[strlen(data)]='\0';
 
     //after zero --continous five 1's stuff zero.
